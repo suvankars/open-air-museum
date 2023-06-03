@@ -2,6 +2,7 @@ import { Nunito } from 'next/font/google'
 import './globals.css'
 import { Inter } from 'next/font/google'
 import Navbar from './components/navbar/navbar'
+import ListingModal from './components/modals/ListingModal'
 
 const nunito = Nunito({ subsets: ['latin'] })
 
@@ -20,6 +21,7 @@ export default function RootLayout({
 
       <body className={nunito.className}>
         <Navbar />
+        <ListingModal />
         {children}
       </body>
     </html>

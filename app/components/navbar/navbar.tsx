@@ -1,3 +1,4 @@
+import AddProperty from "../ListingFunnel/AddProperty"
 import Container from "../container"
 import Logo from "./logo"
 import Search from "./search"
@@ -15,8 +16,9 @@ const Navbar = () => {
                     justify-between
                     md: gap-0
                     ">
-                       <Logo/>
-                       <Search/>
+                        <Logo />
+                        <Search />
+                        <AddProperty />
                     </div>
                 </Container>
             </div>
