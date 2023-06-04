@@ -35,8 +35,6 @@ const Modal: React.FC<ModalProps> = ({
         setShowModal(isOpen)
     }, [isOpen])
 
-    console.log(secondaryAction, secondaryActionLabel)
-
     const handleSubmit = useCallback(() => {
         if (disabled) {
             return;
