@@ -12,6 +12,7 @@ import Price from "./Price"
 import Description from "./Description"
 import Images from "./Images"
 import ThankYou from "./ThankYou" 
+import { CountryValue } from "@/app/type"
 
 enum STEPS {
     CATEGORY = 0,
@@ -51,6 +52,7 @@ const ListingModal = () => {
     })
 
     const category = watch('category')
+    const location = watch('location')
 
     const onBack = () => {
         setStep((value) => value - 1)
@@ -76,7 +78,8 @@ const ListingModal = () => {
     }, [step])
 
     const secondaryActionLabel = useMemo(() => {
-        if (step === (STEPS.CATEGORY || STEPS.THANKYOU)) {
+        console.log("seconderay ", step)
+        if ((step === STEPS.CATEGORY || step === STEPS.THANKYOU)) {
             return undefined
         } else {
             return "Previous"
@@ -118,7 +121,7 @@ const ListingModal = () => {
             bodyContent
             break;
         case STEPS.LOCATION:
-            bodyContent = <Location />
+            bodyContent = <Location  value={location} onChangeCountry={ (location: CountryValue)=> setCustomValue('location', location)}/>
             break;
         case STEPS.INFO:
             bodyContent = <Info />
