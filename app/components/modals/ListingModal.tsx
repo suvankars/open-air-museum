@@ -6,6 +6,12 @@ import { useMemo, useState } from "react"
 import { categories } from "@/app/utils/categories"
 import CategoryInput from "../Input/categoryInput"
 import { FieldValues, useForm } from "react-hook-form"
+import Location from "./Location"
+import Info from "./Info"
+import Price from "./Price"
+import Description from "./Description"
+import Images from "./Images"
+import ThankYou from "./ThankYou" 
 
 enum STEPS {
     CATEGORY = 0,
@@ -13,7 +19,8 @@ enum STEPS {
     INFO = 2,
     IMAGES = 3,
     DESCRIPTION = 4,
-    PRICE = 5
+    PRICE = 5,
+    THANKYOU=6
 }
 
 const ListingModal = () => {
@@ -46,26 +53,36 @@ const ListingModal = () => {
     const category = watch('category')
 
     const onBack = () => {
-        setStep((value) => value + 1)
+        setStep((value) => value - 1)
     }
 
-    const onPrev = () => {
+    const onNext = () => {
+        console.log("onNext1", step)
         setStep((value) => value + 1)
+        
+        console.log("onNext2", step)
     }
 
     const actionLabel = useMemo(() => {
         if (step === STEPS.PRICE) {
-            return 'Create'
+            return 'Submit'
         }
 
-        return "Submit"
+        if (step ===STEPS.THANKYOU) {
+            return undefined
+        }
+
+        return "Next"
     }, [step])
 
     const secondaryActionLabel = useMemo(() => {
-        if (step !== STEPS.CATEGORY) {
+        if (step === (STEPS.CATEGORY || STEPS.THANKYOU)) {
+            return undefined
+        } else {
             return "Previous"
         }
-        return undefined
+
+    
     }, [step])
 
     const setCustomValue = (id: string, value: string) => {
@@ -87,7 +104,7 @@ const ListingModal = () => {
                         <CategoryInput
                             label={item.label}
                             icon={item.icon}
-                            selected={category===item.label}
+                            selected={category === item.label}
                             onClickCB={(category) => setCustomValue('category', category)}
                         />
                     </div>
@@ -95,15 +112,46 @@ const ListingModal = () => {
             })}
         </div>
     </div>
+
+    switch (step) {
+        case STEPS.CATEGORY:
+            bodyContent
+            break;
+        case STEPS.LOCATION:
+            bodyContent = <Location />
+            break;
+        case STEPS.INFO:
+            bodyContent = <Info />
+            break;
+        case STEPS.IMAGES:
+            bodyContent = <Images/>
+            break;
+        case STEPS.DESCRIPTION:
+            bodyContent = <Description/>
+            break;
+        case STEPS.PRICE:
+            bodyContent = <Price/>
+            break;
+        default:
+            bodyContent = <ThankYou/>
+            break;
+    }
+
+    const handleOnClose =()=>{
+        listingModal.onClose()
+        setStep(0)
+    }
+   
+
     return (
         <Modal
-            onClose={listingModal.onClose}
-            onSubmit={listingModal.onClose}
+            onClose={handleOnClose}
+            onSubmit={onNext}
             isOpen={listingModal.isOpen}
             title="Airbnb your home!"
             actionLabel={actionLabel}
             secondaryActionLabel={secondaryActionLabel}
-            secondaryAction={onPrev}
+            secondaryAction={onBack}
             body={bodyContent} />
     )
 }
