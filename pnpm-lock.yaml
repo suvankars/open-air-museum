@@ -8,6 +8,7 @@ specifiers:
   eslint: 8.41.0
   eslint-config-next: 13.4.4
   eslint-config-prettier: ^8.8.0
+  leaflet: ^1.9.4
   next: 13.4.4
   postcss: 8.4.23
   react: 18.2.0
@@ -27,6 +28,7 @@ dependencies:
   autoprefixer: 10.4.14_postcss@8.4.23
   eslint: 8.41.0
   eslint-config-next: 13.4.4_opaykosi7ysrbskpnffskmbrki
+  leaflet: 1.9.4
   next: 13.4.4_biqbaboplfbrettd7655fr4n2y
   postcss: 8.4.23
   react: 18.2.0
@@ -1940,6 +1942,10 @@ packages:
     resolution: {integrity: sha512-qJhlO9cGXi6hBGKoxEG/sKZDAHD5Hnu9Hs4WbOY3pCWXDhw0N8x1NenNzm2EnNLkLkk7J2SdxAkDSbb6ftT+UQ==}
     dependencies:
       language-subtag-registry: 0.3.22
+    dev: false
+
+  /leaflet/1.9.4:
+    resolution: {integrity: sha512-nxS1ynzJOmOlHp+iL3FyWqK89GtNL8U8rvlMOsQdTTssxZwCXh8N2NB3GDQOL+YR3XnWyZAxwQixURb+FA74PA==}
     dev: false
 
   /levn/0.4.1:
