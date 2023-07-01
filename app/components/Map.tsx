@@ -24,7 +24,6 @@ const url = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 const arbitration = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 
 const Map: FC<MapProps> = ({ center }) => {
-    console.log("center", center)
     return (
         <div>
             <MapContainer center={center as L.LatLngExpression || [51, -0.09]}

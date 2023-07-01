@@ -59,10 +59,7 @@ const ListingModal = () => {
     }
 
     const onNext = () => {
-        console.log("onNext1", step)
         setStep((value) => value + 1)
-
-        console.log("onNext2", step)
     }
 
     const actionLabel = useMemo(() => {
@@ -78,7 +75,6 @@ const ListingModal = () => {
     }, [step])
 
     const secondaryActionLabel = useMemo(() => {
-        console.log("seconderay ", step)
         if ((step === STEPS.CATEGORY || step === STEPS.THANKYOU)) {
             return undefined
         } else {
