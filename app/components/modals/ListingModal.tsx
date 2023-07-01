@@ -11,7 +11,7 @@ import Info from "./Info"
 import Price from "./Price"
 import Description from "./Description"
 import Images from "./Images"
-import ThankYou from "./ThankYou" 
+import ThankYou from "./ThankYou"
 import { CountryValue } from "@/app/type"
 
 enum STEPS {
@@ -21,7 +21,7 @@ enum STEPS {
     IMAGES = 3,
     DESCRIPTION = 4,
     PRICE = 5,
-    THANKYOU=6
+    THANKYOU = 6
 }
 
 const ListingModal = () => {
@@ -61,7 +61,7 @@ const ListingModal = () => {
     const onNext = () => {
         console.log("onNext1", step)
         setStep((value) => value + 1)
-        
+
         console.log("onNext2", step)
     }
 
@@ -70,7 +70,7 @@ const ListingModal = () => {
             return 'Submit'
         }
 
-        if (step ===STEPS.THANKYOU) {
+        if (step === STEPS.THANKYOU) {
             return undefined
         }
 
@@ -85,10 +85,10 @@ const ListingModal = () => {
             return "Previous"
         }
 
-    
+
     }, [step])
 
-    const setCustomValue = (id: string, value: string) => {
+    const setCustomValue = (id: string, value: any) => {
         setValue(id, value, {
             shouldDirty: true,
             shouldValidate: true,
@@ -121,30 +121,30 @@ const ListingModal = () => {
             bodyContent
             break;
         case STEPS.LOCATION:
-            bodyContent = <Location  value={location} onChangeCountry={ (location: CountryValue)=> setCustomValue('location', location)}/>
+            bodyContent = <Location value={location} onChangeCountry={(location) => setCustomValue('location', location)} />
             break;
         case STEPS.INFO:
             bodyContent = <Info />
             break;
         case STEPS.IMAGES:
-            bodyContent = <Images/>
+            bodyContent = <Images />
             break;
         case STEPS.DESCRIPTION:
-            bodyContent = <Description/>
+            bodyContent = <Description />
             break;
         case STEPS.PRICE:
-            bodyContent = <Price/>
+            bodyContent = <Price />
             break;
         default:
-            bodyContent = <ThankYou/>
+            bodyContent = <ThankYou />
             break;
     }
 
-    const handleOnClose =()=>{
+    const handleOnClose = () => {
         listingModal.onClose()
         setStep(0)
     }
-   
+
 
     return (
         <Modal

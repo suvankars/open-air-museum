@@ -6,7 +6,7 @@ import { IconType } from "react-icons"
 interface CategoryProps {
     label: string,
     icon: IconType,
-    onClickCB: ( value: string) => void,
+    onClickCB: (value: string) => void,
     selected: boolean
 }
 
@@ -24,7 +24,7 @@ const CategoryInput: React.FC<CategoryProps> = ({ label, icon: Icon, onClickCB, 
         cursor-pointer
         ${selected ? 'border-black' : 'border-neutral-200'}
       `}
-         onClick={() => onClickCB(label)} >
+            onClick={() => onClickCB(label)} >
             <Icon size={30} />
             <div className="font-semibold">
                 {label}

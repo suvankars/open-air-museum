@@ -8,10 +8,10 @@ import Select from 'react-select'
 
 interface CountrySelectProps {
     value: CountryValue,
-    onChangeCountry: (value: CountryValue )=> void
+    onChangeCountry: (value: CountryValue) => void
 }
 
-const countrySelect :FC<CountrySelectProps>= ({value, onChangeCountry}) => {
+const CountrySelect: FC<CountrySelectProps> = ({ value, onChangeCountry }) => {
     const { getAll, getSelected } = useCountries()
     const formatOptionLabel = (option: CountryValue) => {
         return (
@@ -26,24 +26,24 @@ const countrySelect :FC<CountrySelectProps>= ({value, onChangeCountry}) => {
         )
     }
     return (<div>
-        <Select 
-        placeholder="Anywhere" 
-        options={getAll()}
-        value={value}
-        onChange={(value)=>onChangeCountry(value as CountryValue)}
-        formatOptionLabel={formatOptionLabel}
-        theme={(theme) =>({
-            ...theme,
-            borderRadius: 6,
-            colors: {
-                ...theme.colors,
-                primary: 'black',
-                primary25: '#ffe4e6'
-            }
-        })}
+        <Select
+            placeholder="Anywhere"
+            options={getAll()}
+            value={value}
+            onChange={(value) => onChangeCountry(value as CountryValue)}
+            formatOptionLabel={formatOptionLabel}
+            theme={(theme) => ({
+                ...theme,
+                borderRadius: 6,
+                colors: {
+                    ...theme.colors,
+                    primary: 'black',
+                    primary25: '#ffe4e6'
+                }
+            })}
         />
     </div>
     )
 }
 
-export default countrySelect
+export default CountrySelect
