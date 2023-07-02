@@ -53,6 +53,9 @@ const ListingModal = () => {
 
     const category = watch('category')
     const location = watch('location')
+    const guestCount = watch('guestCount')
+    const bathroom = watch('bathroomCount')
+    const images = watch('museumImages')
 
     const onBack = () => {
         setStep((value) => value - 1)
@@ -120,10 +123,19 @@ const ListingModal = () => {
             bodyContent = <Location value={location} onChangeCountry={(location) => setCustomValue('location', location)} />
             break;
         case STEPS.INFO:
-            bodyContent = <Info />
+            bodyContent = <Info
+                value={guestCount}
+                onChange={(count: number) => setCustomValue('guestCount', count)}
+                bathroom={bathroom}
+                onChangeBathroom={(count: number) => setCustomValue('bathroomCount', count)}
+
+            />
             break;
         case STEPS.IMAGES:
-            bodyContent = <Images />
+            bodyContent = <Images
+                value={images}
+                onChange={(value: string) => setCustomValue('museumImages', value)}
+            />
             break;
         case STEPS.DESCRIPTION:
             bodyContent = <Description />
@@ -147,7 +159,7 @@ const ListingModal = () => {
             onClose={handleOnClose}
             onSubmit={onNext}
             isOpen={listingModal.isOpen}
-            title="Airbnb your home!"
+            title="Add your place in the Open Air Museum"
             actionLabel={actionLabel}
             secondaryActionLabel={secondaryActionLabel}
             secondaryAction={onBack}
