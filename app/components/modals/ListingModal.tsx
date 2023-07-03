@@ -56,6 +56,10 @@ const ListingModal = () => {
     const guestCount = watch('guestCount')
     const bathroom = watch('bathroomCount')
     const images = watch('museumImages')
+    const description = watch('description')
+    const price = watch('price')
+
+    console.log("watch , price", price)
 
     const onBack = () => {
         setStep((value) => value - 1)
@@ -138,10 +142,15 @@ const ListingModal = () => {
             />
             break;
         case STEPS.DESCRIPTION:
-            bodyContent = <Description />
+            bodyContent = <Description
+                value={description}
+                onChange={(value: String) => setCustomValue('description', value)} />
             break;
         case STEPS.PRICE:
-            bodyContent = <Price />
+            bodyContent = <Price
+                price={price}
+                onChange={(price: number) => setCustomValue('price', price)}
+            />
             break;
         default:
             bodyContent = <ThankYou />
