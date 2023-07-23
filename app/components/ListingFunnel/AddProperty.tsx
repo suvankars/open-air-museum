@@ -11,11 +11,11 @@ const AddProperty = () => {
 
     return (
         <div className="text-sm font-semibold px-6"
-        onClick={onRent}
+            onClick={onRent}
         >
-            Add Your Property 
+            Add Your Property
         </div>
     )
 }
 
-export  default AddProperty
+export default AddProperty

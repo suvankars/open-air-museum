@@ -5,6 +5,14 @@ import Modal from "./Modal"
 import { useMemo, useState } from "react"
 import { categories } from "@/app/utils/categories"
 import CategoryInput from "../Input/categoryInput"
+import { FieldValues, useForm } from "react-hook-form"
+import Location from "./Location"
+import Info from "./Info"
+import Price from "./Price"
+import Description from "./Description"
+import Images from "./Images"
+import ThankYou from "./ThankYou"
+import { CountryValue } from "@/app/type"
 
 enum STEPS {
     CATEGORY = 0,
@@ -12,60 +20,150 @@ enum STEPS {
     INFO = 2,
     IMAGES = 3,
     DESCRIPTION = 4,
-    PRICE = 5
+    PRICE = 5,
+    THANKYOU = 6
 }
 
 const ListingModal = () => {
     const listingModal = useListingModal()
-    console.log("Listing Modal")
     const [step, setStep] = useState(STEPS.CATEGORY)
 
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        watch,
+        formState: {
+            errors,
+        },
+        reset
+    } = useForm<FieldValues>({
+        defaultValues: {
+            category: '',
+            location: null,
+            activities: '',
+            guestCount: 1,
+            info: '',
+            imageSrc: '',
+            price: 0,
+            title: '',
+            description: ''
+        }
+    })
+
+    const category = watch('category')
+    const location = watch('location')
+    const guestCount = watch('guestCount')
+    const bathroom = watch('bathroomCount')
+    const images = watch('museumImages')
+
     const onBack = () => {
+        setStep((value) => value - 1)
+    }
+
+    const onNext = () => {
         setStep((value) => value + 1)
     }
 
-    const onPrev = () => {
-        setStep((value) => value + 1)
+    const actionLabel = useMemo(() => {
+        if (step === STEPS.PRICE) {
+            return 'Submit'
+        }
+
+        if (step === STEPS.THANKYOU) {
+            return undefined
+        }
+
+        return "Next"
+    }, [step])
+
+    const secondaryActionLabel = useMemo(() => {
+        if ((step === STEPS.CATEGORY || step === STEPS.THANKYOU)) {
+            return undefined
+        } else {
+            return "Previous"
+        }
+
+
+    }, [step])
+
+    const setCustomValue = (id: string, value: any) => {
+        setValue(id, value, {
+            shouldDirty: true,
+            shouldValidate: true,
+            shouldTouch: true
+        })
     }
-
-    const actionLabel = useMemo(()=>{
-        if(step=== STEPS.PRICE){
-            return 'Create'
-        }
-
-        return "Submit"
-    }, [step])
-
-    const secondaryActionLabel =useMemo(()=>{
-        if(step !== STEPS.CATEGORY){
-            return "Previous"    
-        }
-        return undefined
-    }, [step])
 
     let bodyContent = <div className="flex flex-col gap-2">
         <h3 className="font-semibold">Which describe your property best?</h3>
         <p>Choose one of the category</p>
         <div className="grid grid-cols-2 md:grid-col-2 sm:grid-cols-3 gap-3 max-h-[50vh] overflow-y-auto ">
-            {categories.map((category)=>{
-               return <CategoryInput 
-               label={category.label}
-               icon={category.icon}
-               selected={true}
-               onClickCB={()=>{}}/>
+            {categories.map((item) => {
+
+                return (
+                    <div key={item.label} className="col-span-1">
+                        <CategoryInput
+                            label={item.label}
+                            icon={item.icon}
+                            selected={category === item.label}
+                            onClickCB={(category) => setCustomValue('category', category)}
+                        />
+                    </div>
+                )
             })}
         </div>
     </div>
+
+    switch (step) {
+        case STEPS.CATEGORY:
+            bodyContent
+            break;
+        case STEPS.LOCATION:
+            bodyContent = <Location value={location} onChangeCountry={(location) => setCustomValue('location', location)} />
+            break;
+        case STEPS.INFO:
+            bodyContent = <Info
+                value={guestCount}
+                onChange={(count: number) => setCustomValue('guestCount', count)}
+                bathroom={bathroom}
+                onChangeBathroom={(count: number) => setCustomValue('bathroomCount', count)}
+
+            />
+            break;
+        case STEPS.IMAGES:
+            bodyContent = <Images
+                value={images}
+                onChange={(value: string) => setCustomValue('museumImages', value)}
+            />
+            break;
+        case STEPS.DESCRIPTION:
+            bodyContent = <Description />
+            break;
+        case STEPS.PRICE:
+            bodyContent = <Price />
+            break;
+        default:
+            bodyContent = <ThankYou />
+            break;
+    }
+
+    const handleOnClose = () => {
+        listingModal.onClose()
+        setStep(0)
+    }
+
+
     return (
         <Modal
-            onClose={listingModal.onClose}
-            onSubmit={listingModal.onClose}
+            onClose={handleOnClose}
+            onSubmit={onNext}
             isOpen={listingModal.isOpen}
-            title="Airbnb your home!"
+            title="Add your place in the Open Air Museum"
             actionLabel={actionLabel}
-            secondaryActionLabel={secondaryActionLabel} 
-            secondaryAction={ onPrev }
-            body={bodyContent}/>
+            secondaryActionLabel={secondaryActionLabel}
+            secondaryAction={onBack}
+            body={bodyContent} />
     )
 }
 
