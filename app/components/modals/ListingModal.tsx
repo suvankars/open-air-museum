@@ -5,14 +5,17 @@ import Modal from "./Modal"
 import { useMemo, useState } from "react"
 import { categories } from "@/app/utils/categories"
 import CategoryInput from "../Input/categoryInput"
-import { FieldValues, useForm } from "react-hook-form"
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
 import Location from "./Location"
 import Info from "./Info"
 import Price from "./Price"
 import Description from "./Description"
 import Images from "./Images"
 import ThankYou from "./ThankYou"
-import { CountryValue } from "@/app/type"
+import axios from "axios"
+import { Toaster, toast } from "react-hot-toast"
+import { useRouter } from "next/navigation"
+import Input from "../Input/Input"
 
 enum STEPS {
     CATEGORY = 0,
@@ -27,6 +30,8 @@ enum STEPS {
 const ListingModal = () => {
     const listingModal = useListingModal()
     const [step, setStep] = useState(STEPS.CATEGORY)
+    const [loading, setIsLoading] = useState(false)
+    const router = useRouter()
 
     const {
         register,
@@ -41,12 +46,8 @@ const ListingModal = () => {
         defaultValues: {
             category: '',
             location: null,
-            activities: '',
             guestCount: 1,
-            info: '',
-            imageSrc: '',
             price: 0,
-            title: '',
             description: ''
         }
     })
@@ -56,10 +57,8 @@ const ListingModal = () => {
     const guestCount = watch('guestCount')
     const bathroom = watch('bathroomCount')
     const images = watch('museumImages')
-    const description = watch('description')
     const price = watch('price')
 
-    console.log("watch , price", price)
 
     const onBack = () => {
         setStep((value) => value - 1)
@@ -99,6 +98,38 @@ const ListingModal = () => {
         })
     }
 
+    const handleOnClose = () => {
+        listingModal.onClose()
+        setStep(0)
+    }
+
+    const onSubmit: SubmitHandler<FieldValues> = (data) => {
+        if (step != STEPS.PRICE) {
+            return onNext()
+        }
+
+        setIsLoading(true)
+        const submitData = axios.post('/api/listings', data)
+        submitData.then(() => {
+            router.refresh()
+            reset()
+            setStep(STEPS.CATEGORY)
+            listingModal.onClose()
+        }).finally(() => {
+            setIsLoading(false)
+        })
+
+        toast.promise(submitData, {
+            loading: 'Loading',
+            success: 'Listing saved successfully!',
+            error: 'Error when saving!',
+        });
+    }
+
+
+
+
+
     let bodyContent = <div className="flex flex-col gap-2">
         <h3 className="font-semibold">Which describe your property best?</h3>
         <p>Choose one of the category</p>
@@ -132,7 +163,6 @@ const ListingModal = () => {
                 onChange={(count: number) => setCustomValue('guestCount', count)}
                 bathroom={bathroom}
                 onChangeBathroom={(count: number) => setCustomValue('bathroomCount', count)}
-
             />
             break;
         case STEPS.IMAGES:
@@ -142,9 +172,26 @@ const ListingModal = () => {
             />
             break;
         case STEPS.DESCRIPTION:
-            bodyContent = <Description
-                value={description}
-                onChange={(value: String) => setCustomValue('description', value)} />
+            bodyContent = (
+                <div className="flex flex-col gap-8">
+                    <h3>How would you describe your place ?</h3>
+                    <Input
+                        id='title'
+                        register={register}
+                        label="Input"
+                        required
+                        errors={errors}
+
+                    />
+                    <hr />
+                    <Input
+                        id='description'
+                        register={register}
+                        label="Description"
+                        required
+                        errors={errors}
+                    />
+                </div>)
             break;
         case STEPS.PRICE:
             bodyContent = <Price
@@ -157,22 +204,21 @@ const ListingModal = () => {
             break;
     }
 
-    const handleOnClose = () => {
-        listingModal.onClose()
-        setStep(0)
-    }
-
-
     return (
-        <Modal
-            onClose={handleOnClose}
-            onSubmit={onNext}
-            isOpen={listingModal.isOpen}
-            title="Add your place in the Open Air Museum"
-            actionLabel={actionLabel}
-            secondaryActionLabel={secondaryActionLabel}
-            secondaryAction={onBack}
-            body={bodyContent} />
+        <div>
+            <div><Toaster /></div>
+            <Modal
+                onClose={handleOnClose}
+                onSubmit={handleSubmit(onSubmit)}
+                isOpen={listingModal.isOpen}
+                title="Add your place in the Open Air Museum"
+                actionLabel={actionLabel}
+                secondaryActionLabel={secondaryActionLabel}
+                secondaryAction={onBack}
+                body={bodyContent} />
+
+
+        </div>
     )
 }
 
